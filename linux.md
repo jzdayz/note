@@ -1,0 +1,4 @@
+- 进程相关 ps aux | grep '表达式'
+- cpu，内存相关  htop
+- 磁盘相关 ncdu
+- /proc/pid => 记录pid运行的进程信息
