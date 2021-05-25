@@ -2,3 +2,4 @@
 - cpu，内存相关  htop
 - 磁盘相关 ncdu
 - /proc/pid => 记录pid运行的进程信息
+- ubuntu docker 容器无法apt-get install => apt-get update && apt-get install apt-file -y && apt-file update && apt-get install vim -y
