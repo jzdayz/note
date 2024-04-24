@@ -73,3 +73,11 @@ prefix = "10.1.88.104:5000"
 insecure = true
 location = "10.1.88.104:5000"
 ```
+
+### 配置ingress-nginx作为网关
+
+https://kubernetes.github.io/ingress-nginx/deploy/
+```
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.10.1/deploy/static/provider/cloud/deploy.yaml
+```
+
