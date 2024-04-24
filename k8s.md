@@ -63,3 +63,13 @@ https://kuboard.cn/
 sudo ifconfig cni0 down    
 sudo ip link delete cni0
 ```
+
+### 设置私服
+vim /etc/containers/registries.conf
+https://github.com/containers/image/blob/main/docs/containers-registries.conf.5.md
+```
+[[registry]]
+prefix = "10.1.88.104:5000"
+insecure = true
+location = "10.1.88.104:5000"
+```
