@@ -80,4 +80,14 @@ https://kubernetes.github.io/ingress-nginx/deploy/
 ```
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.10.1/deploy/static/provider/cloud/deploy.yaml
 ```
+### flannel插件需要互相能够访问8472端口udp
+对于 master 主机（IP: 192.168.64.17）:
+sudo ufw allow from 192.168.64.15 to any port 8472
+sudo ufw allow from 192.168.64.16 to any port 8472
+对于 worker1 主机（IP: 192.168.64.15）:
+sudo ufw allow from 192.168.64.17 to any port 8472
+sudo ufw allow from 192.168.64.16 to any port 8472
+对于 worker2 主机（IP: 192.168.64.16）:
+sudo ufw allow from 192.168.64.17 to any port 8472
+sudo ufw allow from 192.168.64.15 to any port 8472
 
