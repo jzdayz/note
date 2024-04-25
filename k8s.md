@@ -69,9 +69,9 @@ vim /etc/containers/registries.conf
 https://github.com/containers/image/blob/main/docs/containers-registries.conf.5.md
 ```
 [[registry]]
-prefix = "10.1.88.104:5000"
+prefix = "10.1.88.XX:5000"
 insecure = true
-location = "10.1.88.104:5000"
+location = "10.1.88.XX:5000"
 ```
 
 ### 配置ingress-nginx作为网关
