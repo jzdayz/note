@@ -91,3 +91,67 @@ sudo ufw allow from 192.168.64.16 to any port 8472
 sudo ufw allow from 192.168.64.17 to any port 8472
 sudo ufw allow from 192.168.64.15 to any port 8472
 
+
+## 安装低版本的kubernetes
+
+```
+yum install -y dnf
+
+cat <<EOF | sudo tee /etc/modules-load.d/k8s.conf
+overlay
+br_netfilter
+EOF
+
+sudo modprobe overlay
+sudo modprobe br_netfilter
+
+# 设置所需的 sysctl 参数，参数在重新启动后保持不变
+cat <<EOF | sudo tee /etc/sysctl.d/k8s.conf
+net.bridge.bridge-nf-call-iptables  = 1
+net.bridge.bridge-nf-call-ip6tables = 1
+net.ipv4.ip_forward                 = 1
+EOF
+
+# 应用 sysctl 参数而不重新启动
+sudo sysctl --system
+
+OS=CentOS_7
+VERSION=1.25
+curl -L -o /etc/yum.repos.d/devel:kubic:libcontainers:stable.repo https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/$OS/devel:kubic:libcontainers:stable.repo
+curl -L -o /etc/yum.repos.d/devel:kubic:libcontainers:stable:cri-o:$VERSION.repo https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable:cri-o:$VERSION/$OS/devel:kubic:libcontainers:stable:cri-o:$VERSION.repo
+dnf install -y cri-o
+
+cat <<EOF | sudo tee /etc/yum.repos.d/kubernetes.repo
+[kubernetes]
+name=Kubernetes
+baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-\$basearch
+enabled=1
+gpgcheck=1
+gpgkey=https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+exclude=kubelet kubeadm kubectl
+EOF
+
+# 将 SELinux 设置为 permissive 模式（相当于将其禁用）
+sudo setenforce 0
+sudo sed -i 's/^SELINUX=enforcing$/SELINUX=permissive/' /etc/selinux/config
+
+sudo dnf install -y kubelet kubeadm kubectl --disableexcludes=kubernetes
+
+sudo systemctl enable --now kubelet
+```
+修改镜像
+vim /etc/containers/registries.conf
+```
+[[registry]]
+prefix = "registry.k8s.io"
+ location = "k8s.dockerproxy.com"
+```
+systemctl restart crio
+systemctl restart kubelet
+
+初始化
+```
+kubeadm init   --apiserver-advertise-address=10.19.XX.XX   --cri-socket=unix:///var/run/crio/crio.sock   --pod-network-cidr=10.244.0.0/16 --image-repository='registry.cn-hangzhou.aliyuncs.com/google_containers'
+```
+
+
