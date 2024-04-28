@@ -97,6 +97,8 @@ sudo ufw allow from 192.168.64.15 to any port 8472
 https://v1-25.docs.kubernetes.io/zh-cn/docs/setup/production-environment/container-runtimes/
 
 ```
+sudo swapoff -a
+vim /etc/fstab 禁用交换
 yum install -y dnf
 
 cat <<EOF | sudo tee /etc/modules-load.d/k8s.conf
