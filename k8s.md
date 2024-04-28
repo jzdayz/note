@@ -94,6 +94,8 @@ sudo ufw allow from 192.168.64.15 to any port 8472
 
 ## 安装低版本的kubernetes
 
+https://v1-25.docs.kubernetes.io/zh-cn/docs/setup/production-environment/container-runtimes/
+
 ```
 yum install -y dnf
 
